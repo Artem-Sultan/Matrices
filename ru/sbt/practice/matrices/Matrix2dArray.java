@@ -1,5 +1,7 @@
 package ru.sbt.practice.matrices;
 
+import java.util.Iterator;
+
 /**
  * Created by artem on 28.10.14.
  */
@@ -27,10 +29,15 @@ public class Matrix2dArray extends AbstractMatrix {
         dataMatrix[i][j] = element;
     }
 
+    @Override
+    public Iterator<KeyImpl> notZeroIterator() {
+        return null;
+    }
+
 
     @Override
     public Vector getLine(int line) {
-        return new VectorImpl(dataMatrix[line]);
+        return null;
     }
 
     @Override
@@ -39,7 +46,7 @@ public class Matrix2dArray extends AbstractMatrix {
         for (int line = 0; line < nLines; line++) {
             tempColumn[line] = dataMatrix[line][column];
         }
-        return new VectorImpl(tempColumn);
+        return null;
     }
 
 

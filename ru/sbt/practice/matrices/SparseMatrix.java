@@ -1,6 +1,5 @@
 package ru.sbt.practice.matrices;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,8 +8,7 @@ import java.util.Map;
  * Created by artem on 05.11.14.
  */
 public class SparseMatrix extends AbstractMatrix {
-    private Map<KeyImpl, Double> sparseData = new HashMap<KeyImpl, Double>();
-
+    private Map<KeyImpl, Double> sparseData;
 
     public SparseMatrix(int nLines, int nColumns) {
         super(nLines, nColumns);
@@ -22,7 +20,7 @@ public class SparseMatrix extends AbstractMatrix {
 
     @Override
     public double getElement(int i, int j) {
-        Double result = sparseData.get(new KeyImpl(i, j);
+        Double result = sparseData.get(new KeyImpl(i, j));
         return result  == null ? 0 : result;
     }
 
@@ -32,54 +30,53 @@ public class SparseMatrix extends AbstractMatrix {
             throw new ArrayIndexOutOfBoundsException("row index out of bounds");
         if (j < 0 || j > nColumns)
             throw new ArrayIndexOutOfBoundsException("col index out of bounds");
+        if (sparseData==null) sparseData = new HashMap<KeyImpl, Double>();
         if (element != 0) sparseData.put(new KeyImpl(i,j), element);
     }
 
-
-    //wrapper
     @Override
-    public Vector getLine(int line) {
+    public Iterator<KeyImpl> notZeroIterator() {
+        final Iterator<KeyImpl> it = sparseData.keySet().iterator();
+        class notZeroIt  implements Iterator<KeyImpl>{
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
 
-        return temp;
+            @Override
+            public KeyImpl next() {
+                return it.next();
+            }
+        }
+        return new notZeroIt();
     }
 
+
+    @Override
+    public Vector getLine(int line) {
+        return new WrapVector(nColumns,line,true);
+    }
 
     @Override
     public Vector getColumn(int column) {
-
-        return temp;
+        return new WrapVector(nLines,column,false);
     }
 
-    private class WarpVector implements Vector {
+    //wrapper
+    private class WrapVector extends AbstractVector {
         private final boolean isLine;
         private final int positionInMatrix;
-        private boolean isTransported;
 
-        private WarpVector(boolean isLine, int positionInMatrix) {
+        private WrapVector(int length, int positionInMatrix, boolean isLine) {
+            super(length);
             this.isLine = isLine;
-            isTransported = !isLine;
+            if (!isLine) super.transportate();
             this.positionInMatrix = positionInMatrix;
-        }
-
-
-        @Override
-        public int getLength() {
-            return isLine ? nColumns:nLines ;
         }
 
         @Override
         public double getElement(int i) {
-            return isLine ? SparseMatrix.this.getElement(positionInMatrix,i):SparseMatrix.this.getElement(i,positionInMatrix);
-        }
-
-        @Override
-        public void transportate() {
-            isTransported = !isTransported;
-        }
-
-        @Override
-        public boolean isTransported() {
-            return isTransported;
+            return isLine ? SparseMatrix.this.getElement(positionInMatrix, i) : SparseMatrix.this.getElement(i, positionInMatrix);
         }
 
         @Override
@@ -91,21 +88,34 @@ public class SparseMatrix extends AbstractMatrix {
 
         @Override
         public Iterator iteratorNotZero() {
-            Collection entries = sparseData.entrySet();
-            entries.
-            Iterator entryIt = entries.iterator();
-            Map.Entry<Integer, Double> entry;
-
-             class ItNotZero implements Iterator<AbstractVector.IndexValue>{
-
-
-                int i =0;
-                int nextIndexNotZero = -1;
-                private final int vectorLength;
-                {
-                     if (isLine) vectorLength=nColumns;
-                     else vectorLength = nLines;
+            class ItNotZero implements Iterator<AbstractVector.IndexValue>{
+                private int tempNotZero=0;
+                boolean hadNext = false;
+                @Override
+                public boolean hasNext() {
+                        for (int j=tempNotZero; j<length; j++) {
+                            if (getElement(j) !=0 ) {
+                                if (!hadNext) tempNotZero = j;
+                                hadNext = true;
+                                return true;
+                            }
+                        }
+                    return false;
                 }
+
+                @Override
+                public AbstractVector.IndexValue next() {
+                    hadNext = false;
+                    return new AbstractVector.IndexValue(tempNotZero, getElement(tempNotZero++));
+                }
+            }
+            return new ItNotZero();
+        }
+
+        @Override
+        public Iterator iteratorAll() {
+            class ItAll implements Iterator<AbstractVector.IndexValue>{
+                private int i=0;
 
                 @Override
                 public boolean hasNext() {
@@ -114,108 +124,14 @@ public class SparseMatrix extends AbstractMatrix {
 
                 @Override
                 public AbstractVector.IndexValue next() {
-                    if (nextIndexNotZero < i) {
-                        if (entryIt.hasNext()) {
-                            entry = (Map.Entry<Integer, Double>) entryIt.next();
-                            nextIndexNotZero = entry.getKey();
-                        }
-                        else nextIndexNotZero = length;
-                    }
-                    if (i == nextIndexNotZero) {
-                        i++;
-                        return new AbstractVector.IndexValue(entry.getKey(), entry.getValue());
-                    }
                     i++;
-                    return new AbstractVector.IndexValue(i, 0);
-                }
-            }
-        }
-
-        @Override
-        public Iterator iteratorAll() {
-            class ItAll implements Iterator<AbstractVector.IndexValue>{
-                private int i=0;
-                private final int vectorLength;
-                {
-                    if (isLine) vectorLength=nColumns;
-                    else vectorLength = nLines;
-                }
-
-                @Override
-                public boolean hasNext() {
-                    return i<vectorLength;
-                }
-
-                @Override
-                public AbstractVector.IndexValue next() {
-                    i++;
-                    return new AbstractVector.IndexValue(i-1,WarpVector.this.getElement(i-1));
+                    return new AbstractVector.IndexValue(i-1,getElement(i - 1));
                 }
             }
             return new ItAll();
         }
-
-        @Override
-        public double scalarProductWith(Vector fooVector) throws IllegalArgumentException {
-            return 0;
-        }
-
-        @Override
-        public Matrix castToMatrix() {
-            return null;
-        }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public String toString() {
-        String tmp = new String();
-        for (int i = 0; i < nLines; i++) {
-            for (int j = 0; j < nColumns; j++) {
-                tmp = tmp + getElement(i, j) + " ";
-            }
-            tmp += '\n';
-        }
-        return tmp;
-    }
-
-
-
-    public class KeyImpl {
-        private final int x;
-        private final int y;
-
-        public KeyImpl(int x, int y) {
-            this.x = x;
-            this.y =y;
-        }
-        @Override
-        public boolean equals(Object o){
-            if (this == o) return true;
-            if (!(o instanceof KeyImpl)) return false;
-            KeyImpl key = (KeyImpl)o;
-            return x == key.x && y == key.y;
-        }
-        @Override
-        public int hashCode() {
-            int res = 17;
-            res = res * 31 + Math.min(x, y);
-            res = res * 31 + Math.max(y, x);
-            return res;
-        }
-    }
 }
 
 

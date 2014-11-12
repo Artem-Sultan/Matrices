@@ -14,21 +14,43 @@ public class Main {
 
 
 
-        double[] nums3 = {0, 0, 0, 0, 5, 0, 0, 0, 0, 10, 0, 12, 0};
+        double[] nums3 = {0, 1};
+        double[] nums5 = {2, 2}; //, 5, 0, 0, 0, 0, 10, 0, 12, 0};
 
         SparseVector testVector1 = new SparseVector(nums3);
-        SparseMatrix test1 = new SparseMatrix(nums);
+        SparseVector testVector2 = new SparseVector(nums5);
+       // SparseMatrix test1 = new SparseMatrix(nums);
         SparseMatrix test2 = new SparseMatrix(nums2);
-        SparseMatrix test3 = new SparseMatrix(nums4);
-
+        SparseMatrix test3 = new SparseMatrix(nums);
+/*
         try {
-            SparseMatrix tst3 = (SparseMatrix)test2.productWith(test1);
+            SparseMatrix tst3 = (SparseMatrix) test2.productWith(test1,SparseMatrix.class);
             System.out.println(tst3);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 
-        System.out.println(test3);
+
+    */
+
+        System.out.println("matrix1: \n" + test2 + "matrix2: \n" + test3);
+        for (int i = 0; i < test3.nLines; i++) {
+            for (int j = 0; j < test3.nColumns; j++) {
+                test3.setElement(i, j, i + 2 * j);
+            }
+
+        }
+        System.out.println("Matrix2 after setters: \n" + test3);
+
+        System.out.println("1 productable with 2: \n" + test2.isProductable(test3));
+        System.out.println("scalar = " + testVector1.scalarProductWith(testVector2));
+
+
+
+         SparseMatrix newM = (SparseMatrix)test2.productWith(test3, SparseMatrix.class);
+         //System.out.println("Product:\n" + test3.getColumn(0).scalarProductWith(testVector2));
+        System.out.println("vector product: \n" + newM);
+        //System.out.println("Product:\n" + test2.getColumn(0).scalarProductWith(test3.getColumn(0)));
 
         //testVector1.transportate();
 

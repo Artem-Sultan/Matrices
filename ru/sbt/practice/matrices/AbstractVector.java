@@ -17,8 +17,6 @@ public abstract class AbstractVector implements Vector {
         }
     }
 
-
-
     public AbstractVector(int _length) {
         length = _length;
     }
@@ -88,72 +86,56 @@ public abstract class AbstractVector implements Vector {
         }
     }
 
-    public class MatrixWarp implements Matrix{
-        @Override
-        public int getNumberOfLines() {
-            return isTransported ? length : 1;
-        }
-        @Override
-        public int getNumberOfColumns() {
-            return isTransported ? 1 : length;
-        }
-        @Override
-        public double getElement(int i, int j) {
-            return isTransported ?  AbstractVector.this.getElement(i):AbstractVector.this.getElement(j);
-        }
-        @Override
-        public void setElement(int i, int j, double element) {
-            if (isTransported) { AbstractVector.this.setElement(i,element);}
-            else {AbstractVector.this.setElement(j,element);}
-        }
-        @Override
-        public boolean isProductable(Matrix foo) {
-            if (isTransported) return (length == foo.getNumberOfColumns());
-            else return (length == foo.getNumberOfLines());
-        }
+public class MatrixWrap extends AbstractMatrix{
+    protected MatrixWrap(int nLines, int nColumns) {
+        super(nLines, nColumns);
+    }
 
-        @Override
-        public Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException {
-            int fooColumns = foo.getNumberOfColumns();
-            double temp;
-            if (!isProductable(foo)) {
-                throw new IllegalArgumentException("can't make the product, dimensions don't match");
-            } else {
-                Matrix product = MatrixFactory.create(resultClass, length, fooColumns);
-                for (int i = 0; i < length; i++) {
-                    for (int j = 0; j < fooColumns; j++) {
-                        try {
-                            temp = this.getLine(i).scalarProductWith(foo.getColumn(j));
-                            product.setElement(i, j, temp);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                return product;
-            }
-        }
+    @Override
+    public double getElement(int i, int j) {
+        return isTransported ?  AbstractVector.this.getElement(i):AbstractVector.this.getElement(j);
+    }
 
-        @Override
-        public Vector getLine(int line) {
-            if (!isTransported && line == 0) return AbstractVector.this;
-            double[] temp = new double[1];
-            temp[0] = AbstractVector.this.getElement(line);
-            return new ArrayVector(temp);
-        }
+    @Override
+    public void setElement(int i, int j, double element) {
+        if (isTransported) { AbstractVector.this.setElement(i,element);}
+        else {AbstractVector.this.setElement(j,element);}
+    }
 
-        @Override
-        public Vector getColumn(int column) {
-            if (!isTransported && column == 0) return AbstractVector.this;
-            double[] temp = new double[1];
-            temp[0] = AbstractVector.this.getElement(column);
-            return new ArrayVector(temp);
+    @Override
+    public Iterator<KeyImpl> notZeroIterator() {
+        return null;
+    }
+
+    @Override
+    public Vector getLine(int line) {
+        if (!isTransported && line == 0) return AbstractVector.this;
+        double[] temp = new double[1];
+        temp[0] = AbstractVector.this.getElement(line);
+        return new ArrayVector(temp);
+    }
+
+    @Override
+    public Vector getColumn(int column) {
+        if (!isTransported && column == 0) return AbstractVector.this;
+        double[] temp = new double[1];
+        temp[0] = AbstractVector.this.getElement(column);
+        return new ArrayVector(temp);
+    }
+}
+
+    @Override
+    public String toString() {
+        String res = "";
+        for (int i = 0; i < length; i++) {
+             res = res + getElement(i) + " ";
         }
+        return res;
     }
 
     @Override
     public Matrix castToMatrix(){
-        return new MatrixWarp();
+        return isTransported ? new MatrixWrap(length,1): new MatrixWrap(1,length);
     }
 
 }

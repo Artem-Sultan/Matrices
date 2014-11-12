@@ -8,9 +8,7 @@ import java.util.*;
  */
 public class SparseVector extends AbstractVector {
     private boolean isTransported = false;
-    private int length;
     private TreeMap<Integer,Double> sparseData;
-    private int maxIndex=0;
 
     public SparseVector(double[] data){
         super (data);
@@ -99,6 +97,7 @@ public class SparseVector extends AbstractVector {
     public void setElement(int i, double element) {
             if (i >= 0 && i < length)
             {
+                if (sparseData == null) sparseData = new TreeMap<Integer, Double>();
                 sparseData.put(i,element);
             } else
             {
@@ -106,15 +105,5 @@ public class SparseVector extends AbstractVector {
             }
     }
 
-    @Override
-    public String toString(){
-        String result = "";
-        Iterator it = new ItAll();
-        IndexValue tmp = new IndexValue(1,1);
-        while (it.hasNext()) {
-            tmp = (IndexValue)it.next();
-            result = result + tmp.getValue() +" ";
-        }
-        return result;
-    }
+
 }
