@@ -34,6 +34,8 @@ public class SparseMatrix extends AbstractMatrix {
         if (element != 0) sparseData.put(new KeyImpl(i,j), element);
     }
 
+
+
     @Override
     public Iterator<KeyImpl> notZeroIterator() {
         final Iterator<KeyImpl> it = sparseData.keySet().iterator();

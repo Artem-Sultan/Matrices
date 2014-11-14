@@ -1,6 +1,5 @@
 package ru.sbt.practice.matrices;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -12,7 +11,9 @@ public interface Matrix {
     double getElement (int i,int j);
     void setElement(int i, int j, double element);
     boolean isProductable(Matrix foo);
-    Matrix plus(Matrix M);
+
+    Matrix sparsePlus(Matrix M, Class matrixClass);
+    Matrix plus (Matrix M, Class matrixClass);
     Iterator<AbstractMatrix.KeyImpl> notZeroIterator ();
     Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException;
     Matrix transpose();

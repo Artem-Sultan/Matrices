@@ -28,7 +28,6 @@ public class Matrix2dArray extends AbstractMatrix {
     public void setElement(int i, int j, double element) {
         dataMatrix[i][j] = element;
     }
-
     @Override
     public Iterator<KeyImpl> notZeroIterator() {
         return null;

@@ -1,7 +1,8 @@
 package ru.sbt.practice.matrices;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -49,6 +50,42 @@ public abstract class AbstractMatrix implements Matrix {
     }
 
     @Override
+    public Matrix sparsePlus(Matrix M, Class matrixClass) {
+        Map<KeyImpl, String> cash = new HashMap<KeyImpl, String>();
+        final String foo = " ";
+        Matrix result = MatrixFactory.create(matrixClass,nLines, nColumns);
+        Iterator<KeyImpl> it = this.notZeroIterator();
+        while (it.hasNext()) {
+            KeyImpl pair = it.next();
+            int x = pair.getX();
+            int y = pair.getY();
+            result.setElement(x, y, M.getElement(x, y) + this.getElement(x, y));
+            cash.put(pair, foo);
+        }
+        Iterator<KeyImpl> it2 = M.notZeroIterator();
+        while (it2.hasNext()) {
+            KeyImpl pair = it2.next();
+            if (cash.get(pair) == null) {
+                int x = pair.getX();
+                int y = pair.getY();
+                result.setElement(x, y, M.getElement(x, y));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Matrix plus(Matrix M, Class matrixClass) {
+        Matrix result = MatrixFactory.create(matrixClass,nLines, nColumns);
+        for (int i = 0; i < nLines; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                 result.setElement(i, j, M.getElement(i, j) + this.getElement(i, j));
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException {
         int fooColumns = foo.getNumberOfColumns();
         double temp;
@@ -72,34 +109,12 @@ public abstract class AbstractMatrix implements Matrix {
 
 
     @Override
-    public  Matrix plus(Matrix M) {
-        try {
-            Matrix result = (Matrix) this.clone();
-            Iterator<KeyImpl> it = notZeroIterator();
-            while (it.hasNext()) {
-                KeyImpl pair = it.next();
-                int x = pair.x;
-                int y = pair.y;
-                result.setElement(x, y, result.getElement(x, y) + this.getElement(x, y));
-            }
-            return result;
-
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-
-
-    @Override
-    public abstract Iterator<KeyImpl>  notZeroIterator();
+    public abstract Iterator<KeyImpl> notZeroIterator();
 
 
     @Override
     public Matrix transpose() {
-         class WrapTransposed extends AbstractMatrix {
+        class WrapTransposed extends AbstractMatrix {
 
             protected WrapTransposed(int nLines, int nColumns) {
                 super(nColumns, nLines);
@@ -115,33 +130,28 @@ public abstract class AbstractMatrix implements Matrix {
                 AbstractMatrix.this.setElement(j, i, element);
             }
 
-             @Override
-             public Matrix plus(Matrix M) {
-                 return AbstractMatrix.this.plus(M);
-             }
+            @Override
+            public Iterator<KeyImpl> notZeroIterator() {
+                final Iterator<KeyImpl> it = AbstractMatrix.this.notZeroIterator();
 
-             @Override
-             public Iterator<KeyImpl> notZeroIterator() {
-                 final Iterator<KeyImpl> it = AbstractMatrix.this.notZeroIterator();
+                class transposedIterator implements Iterator<KeyImpl> {
 
-                 class transposedIterator  implements Iterator<KeyImpl>{
+                    @Override
+                    public boolean hasNext() {
+                        return it.hasNext();
+                    }
 
-                     @Override
-                     public boolean hasNext() {
-                         return it.hasNext();
-                     }
-
-                     @Override
-                     public KeyImpl next() {
-                         KeyImpl tmp = it.next();
-                         return new KeyImpl(tmp.y,tmp.x);
-                     }
-                 }
-                 return new transposedIterator();
-             }
+                    @Override
+                    public KeyImpl next() {
+                        KeyImpl tmp = it.next();
+                        return new KeyImpl(tmp.y, tmp.x);
+                    }
+                }
+                return new transposedIterator();
+            }
 
 
-             @Override
+            @Override
             public Vector getLine(int line) {
                 return AbstractMatrix.this.getColumn(line);
             }
@@ -151,7 +161,7 @@ public abstract class AbstractMatrix implements Matrix {
                 return AbstractMatrix.this.getLine(column);
             }
         }
-        return new WrapTransposed(nLines,nColumns);
+        return new WrapTransposed(nLines, nColumns);
     }
 
     @Override
@@ -162,20 +172,30 @@ public abstract class AbstractMatrix implements Matrix {
 
 
     public static class KeyImpl {
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
         private final int x;
         private final int y;
 
         public KeyImpl(int x, int y) {
             this.x = x;
-            this.y =y;
+            this.y = y;
         }
+
         @Override
-        public boolean equals(Object o){
+        public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof KeyImpl)) return false;
-            KeyImpl key = (KeyImpl)o;
+            KeyImpl key = (KeyImpl) o;
             return x == key.x && y == key.y;
         }
+
         @Override
         public int hashCode() {
             int res = 17;

@@ -1,7 +1,5 @@
 package ru.sbt.practice.matrices;
 
-import java.io.IOException;
-
 /**
  * Created by artem on 28.10.14.
  */
@@ -9,9 +7,8 @@ public class Main {
 
     public static void main(String[] args) {
         double[][] nums = {{1, 0, 1}, {0, 0, 1}};
-        double[][] nums2 = {{1, 1}, {0,0}};
-        double[][] nums4= {{0,0}, {0,0}};
-
+        double[][] M1 = {{1, 1}, {0,0}};
+        double[][] M2= {{0,1}, {0,2}};
 
 
         double[] nums3 = {0, 1};
@@ -20,8 +17,8 @@ public class Main {
         SparseVector testVector1 = new SparseVector(nums3);
         SparseVector testVector2 = new SparseVector(nums5);
        // SparseMatrix test1 = new SparseMatrix(nums);
-        SparseMatrix test2 = new SparseMatrix(nums2);
-        SparseMatrix test3 = new SparseMatrix(nums);
+        SparseMatrix test1 = new SparseMatrix(M1);
+        SparseMatrix test2 = new SparseMatrix(M2);
 /*
         try {
             SparseMatrix tst3 = (SparseMatrix) test2.productWith(test1,SparseMatrix.class);
@@ -31,7 +28,7 @@ public class Main {
         }
 
 
-    */
+
 
         System.out.println("matrix1: \n" + test2 + "matrix2: \n" + test3);
         for (int i = 0; i < test3.nLines; i++) {
@@ -40,16 +37,20 @@ public class Main {
             }
 
         }
+
+
         System.out.println("Matrix2 after setters: \n" + test3);
 
         System.out.println("1 productable with 2: \n" + test2.isProductable(test3));
         System.out.println("scalar = " + testVector1.scalarProductWith(testVector2));
+*/
+        SparseMatrix newM1 = (SparseMatrix)test1.sparsePlus(test2,SparseMatrix.class);
 
 
 
-         SparseMatrix newM = (SparseMatrix)test2.productWith(test3, SparseMatrix.class);
+         //SparseMatrix newM = (SparseMatrix)test2.productWith(test3, SparseMatrix.class);
          //System.out.println("Product:\n" + test3.getColumn(0).scalarProductWith(testVector2));
-        System.out.println("vector product: \n" + newM);
+        System.out.println("sum : \n" + newM1);
         //System.out.println("Product:\n" + test2.getColumn(0).scalarProductWith(test3.getColumn(0)));
 
         //testVector1.transportate();
