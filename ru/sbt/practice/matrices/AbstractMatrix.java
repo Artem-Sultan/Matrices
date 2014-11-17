@@ -96,7 +96,9 @@ public abstract class AbstractMatrix implements Matrix {
             for (int i = 0; i < nLines; i++) {
                 for (int j = 0; j < fooColumns; j++) {
                     try {
-                        temp = this.getLine(i).scalarProductWith(foo.getColumn(j));
+                        Vector line = this.getLine(i);
+                        Vector column =foo.getColumn(j) ;
+                        temp = line.scalarProductWith(column);
                         product.setElement(i, j, temp);
                     } catch (Exception e) {
                         e.printStackTrace();

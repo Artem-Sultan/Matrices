@@ -6,7 +6,10 @@ package ru.sbt.practice.matrices;
 public class Main {
 
     public static void main(String[] args) {
-        double[][] nums = {{1, 0, 1}, {0, 0, 1}};
+        double[][] nums1 = {{0, 0, 1, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}, {0, 0, 1, 0}, };
+        double[][] nums2 = {{1, 0, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {0, 0, 0, 2}, };
+
+
         double[][] M1 = {{1, 1}, {0,0}};
         double[][] M2= {{0,1}, {0,2}};
 
@@ -17,8 +20,8 @@ public class Main {
         SparseVector testVector1 = new SparseVector(nums3);
         SparseVector testVector2 = new SparseVector(nums5);
        // SparseMatrix test1 = new SparseMatrix(nums);
-        SparseMatrix test1 = new SparseMatrix(M1);
-        SparseMatrix test2 = new SparseMatrix(M2);
+        SparseMatrix test1 = new SparseMatrix(nums1);
+        SparseMatrix test2 = new SparseMatrix(nums2);
 /*
         try {
             SparseMatrix tst3 = (SparseMatrix) test2.productWith(test1,SparseMatrix.class);
@@ -44,7 +47,7 @@ public class Main {
         System.out.println("1 productable with 2: \n" + test2.isProductable(test3));
         System.out.println("scalar = " + testVector1.scalarProductWith(testVector2));
 */
-        SparseMatrix newM1 = (SparseMatrix)test1.sparsePlus(test2,SparseMatrix.class);
+        SparseMatrix newM1 = (SparseMatrix)test2.productWith(test1,SparseMatrix.class);
 
 
 
