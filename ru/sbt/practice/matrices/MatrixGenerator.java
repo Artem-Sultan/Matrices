@@ -11,11 +11,14 @@ import static ru.sbt.practice.matrices.AbstractMatrix.KeyImpl;
 public class MatrixGenerator implements MatrixGeneratorInterface{
     private static LinkedHashSet<AbstractMatrix.KeyImpl> randomKeys;
 
+    public MatrixGenerator() {
+        randomKeys = new LinkedHashSet<KeyImpl>();
+    }
+
     @Override
     public Matrix randomSparse(Class matrixClass, int nLines, int nColumns, double loadFactor) {
         Matrix result = MatrixFactory.create(matrixClass, nLines,nColumns);
         int dataVolume = (int)Math.round(nLines*nColumns*loadFactor);
-        randomKeys = new LinkedHashSet<AbstractMatrix.KeyImpl>();
         Random randomGenerator = new Random();
         KeyImpl tmpKey;
         int x,y;
@@ -24,7 +27,7 @@ public class MatrixGenerator implements MatrixGeneratorInterface{
                 x = randomGenerator.nextInt(nLines);
                 y = randomGenerator.nextInt(nColumns);
                 tmpKey = new KeyImpl(x,y);
-            } while (randomKeys.add(tmpKey));
+            } while (!randomKeys.add(tmpKey));
             result.setElement(x,y,randomGenerator.nextDouble());
         }
         return result;
