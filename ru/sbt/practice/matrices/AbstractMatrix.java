@@ -205,6 +205,11 @@ public abstract class AbstractMatrix implements Matrix {
             res = res * 31 + Math.max(y, x);
             return res;
         }
+        @Override
+        public String toString() {
+            return  x + " " + y;
+        }
+
     }
 
     @Override

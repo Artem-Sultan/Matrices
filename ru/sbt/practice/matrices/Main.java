@@ -1,7 +1,5 @@
 package ru.sbt.practice.matrices;
 
-import java.util.Iterator;
-
 /**
  * Created by artem on 28.10.14.
  */
@@ -24,17 +22,20 @@ public class Main {
        // SparseMatrix test1 = new SparseMatrix(nums);
         SparseMatrix test1 = new SparseMatrix(nums1);
         SparseMatrix test2 = new SparseMatrix(nums2);
+        Matrix2dArray test3 = new Matrix2dArray(nums2);
+        Matrix2dArray test4 = new Matrix2dArray(nums1);
+
 
         SparseMatrix newM1 = (SparseMatrix)test2.productWith(test1, SparseMatrix.class);
         MatrixGenerator mGenerator = new MatrixGenerator();
         SparseMatrix newM2 = (SparseMatrix)mGenerator.randomSparse(SparseMatrix.class,10,10,0.3);
         SparseMatrix newM3 = (SparseMatrix)mGenerator.randomNonSparse(SparseMatrix.class, 10,10);
-        System.out.println(newM3);
-        Iterator it = newM2.notZeroIterator();int i = 0;
-        while (it.hasNext()) {
-            System.out.println(it.next() + "     " + i);
-            i++;
-        }
+
+        System.out.println(test3);
+        System.out.println(test4);
+        System.out.println(test3.productWith(test4,Matrix2dArray.class));
+
+
 
     }
 }
