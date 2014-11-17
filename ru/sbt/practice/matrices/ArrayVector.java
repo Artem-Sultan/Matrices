@@ -82,6 +82,13 @@ public class ArrayVector extends AbstractVector {
 
     @Override
     public void setElement(int i, double element) {
+        if (vector == null)
+            vector = new double[0];
+        double[] temp = new double[vector.length+1];
+        for (int j = 0; j < vector.length; j++) {
+            temp[j] = vector[j];
+        }
+        vector = temp;
         vector[i] = element;
     }
 

@@ -1,61 +1,100 @@
 package ru.sbt.practice.matrices;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Created by artem on 28.10.14.
  */
 public class Main {
 
     public static void main(String[] args) {
-        double[][] nums = {{1, 0, 1}, {0, 0, 1}};
-        double[][] M1 = {{1, 1}, {0,0}};
-        double[][] M2= {{0,1}, {0,2}};
+        double[][] nums = {{1, 0, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {0, 0, 0 ,2}};
+        double[][] nums2 = {{0, 0, 1, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}, {0, 0, 1, 0}};
 
+//        Matrix matrix = new SparseMatrix2(nums);
 
-        double[] nums3 = {0, 1};
-        double[] nums5 = {2, 2}; //, 5, 0, 0, 0, 0, 10, 0, 12, 0};
+        Map<Integer, Double> shit = new TreeMap<Integer, Double>();
+        shit.put(0, 23423423.0);
+        shit.put(3, 453453453.0);
+        shit.put(1, 342.0);
+        shit.put(8, 23423443.0);
+        shit.put(2, 45342.0);
+        shit.put(5, 3243423.0);
+        shit.put(9, 2321.0);
+        shit.put(6, 23.0);
+        shit.put(1435, 9999999999.0);
+        shit.put(999999999, 3323.0);
 
-        SparseVector testVector1 = new SparseVector(nums3);
-        SparseVector testVector2 = new SparseVector(nums5);
-       // SparseMatrix test1 = new SparseMatrix(nums);
-        SparseMatrix test1 = new SparseMatrix(M1);
-        SparseMatrix test2 = new SparseMatrix(M2);
-/*
+        SparseMatrix2 m = new SparseMatrix2(5, 5);
+        m.setElement(3, 2, 6.0);
+        m.setElement(3, 1, 6754.0);
+        m.setElement(3, 0, 54.0);
+        m.setElement(2, 4, 54.0);
+        m.setElement(2, 1, 1234.0);
+        System.out.println(m);
+        System.out.println(m.getElement(0, 2));
+        SparseVector gavno = (SparseVector)m.getColumn(1);
+   //     gavno.print();
+        Matrix product = null;
+
         try {
-            SparseMatrix tst3 = (SparseMatrix) test2.productWith(test1,SparseMatrix.class);
-            System.out.println(tst3);
-        } catch (IllegalArgumentException e) {
+            product = MatrixFactory.create(SparseMatrix2.class, 10, 10);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
             e.printStackTrace();
         }
 
+        System.out.println(product.getNumberOfLines());
+        System.out.println(product.getNumberOfColumns());
 
+        double[] suka = {8.0, 5.0, 4.0, 3.0, 2.0, 5.0, 7.0};
+        Vector vector1 = new ArrayVector(suka);
+        double result = vector1.scalarProductWith(vector1);
+        System.out.println(result);
+        System.out.println(((SparseVector) m.getLine(2)).scalarProductWith((SparseVector) m.getLine(3)));
 
+        SparseMatrix m2 = new SparseMatrix(nums);
+        SparseMatrix m3 = new SparseMatrix(nums2);
 
-        System.out.println("matrix1: \n" + test2 + "matrix2: \n" + test3);
-        for (int i = 0; i < test3.nLines; i++) {
-            for (int j = 0; j < test3.nColumns; j++) {
-                test3.setElement(i, j, i + 2 * j);
-            }
+        SparseMatrix2 res = null;
+        try {
+            res = (SparseMatrix2)m2.productWith(m3, SparseMatrix2.class);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
 
+        Iterator<AbstractVector.IndexValue> iter;
+        for (iter = m2.getLine(0).iteratorNotZero(); iter.hasNext(); ) {
+            AbstractVector.IndexValue iv = iter.next();
+            System.out.println(iv.getIndex() + " " + iv.getValue());
+        }
+
+        for (iter = m3.getColumn(2).iteratorNotZero(); iter.hasNext(); ) {
+            AbstractVector.IndexValue iv = iter.next();
+            System.out.println(iv.getIndex() + " " + iv.getValue());
         }
 
 
-        System.out.println("Matrix2 after setters: \n" + test3);
-
-        System.out.println("1 productable with 2: \n" + test2.isProductable(test3));
-        System.out.println("scalar = " + testVector1.scalarProductWith(testVector2));
-*/
-        SparseMatrix newM1 = (SparseMatrix)test1.sparsePlus(test2,SparseMatrix.class);
-
-
-
-         //SparseMatrix newM = (SparseMatrix)test2.productWith(test3, SparseMatrix.class);
-         //System.out.println("Product:\n" + test3.getColumn(0).scalarProductWith(testVector2));
-        System.out.println("sum : \n" + newM1);
-        //System.out.println("Product:\n" + test2.getColumn(0).scalarProductWith(test3.getColumn(0)));
-
-        //testVector1.transportate();
-
-        //MatrixImpl test4 = (MatrixImpl) testVector1.castToMatrix();
+/*
+        for (Map.Entry<Integer, Double> entry: shit.entrySet())
+            System.out.println(entry.getKey() + " = " + entry.getValue());*/
 
     }
 }

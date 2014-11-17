@@ -18,6 +18,12 @@ public class SparseVector extends AbstractVector {
         super(l);
     }
 
+    public SparseVector(TreeMap<Integer,Double> data, int size) {
+        super(size);
+//        length = size;
+        sparseData = data;
+    }
+
     @Override
     public Iterator<IndexValue> iteratorAll() {
         return new ItAll();

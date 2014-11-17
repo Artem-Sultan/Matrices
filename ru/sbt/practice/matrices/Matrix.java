@@ -1,5 +1,6 @@
 package ru.sbt.practice.matrices;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 /**
@@ -12,10 +13,10 @@ public interface Matrix {
     void setElement(int i, int j, double element);
     boolean isProductable(Matrix foo);
 
-    Matrix sparsePlus(Matrix M, Class matrixClass);
-    Matrix plus (Matrix M, Class matrixClass);
+    Matrix sparsePlus(Matrix M, Class matrixClass) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
+    Matrix plus (Matrix M, Class matrixClass) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
     Iterator<AbstractMatrix.KeyImpl> notZeroIterator ();
-    Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException;
+    Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
     Matrix transpose();
     Vector getLine(int line);
     Vector getColumn(int column);
