@@ -26,9 +26,9 @@ public class SparseMatrix extends AbstractMatrix {
 
     @Override
     public void setElement(int i, int j, double element) {
-        if (i < 0 || i > nLines)
+        if (i < 0 || i >= nLines)
             throw new ArrayIndexOutOfBoundsException("row index out of bounds");
-        if (j < 0 || j > nColumns)
+        if (j < 0 || j >= nColumns)
             throw new ArrayIndexOutOfBoundsException("col index out of bounds");
         if (sparseData==null) sparseData = new HashMap<KeyImpl, Double>();
         if (element != 0) sparseData.put(new KeyImpl(i,j), element);
