@@ -75,6 +75,8 @@ public abstract class AbstractVector implements Vector {
             Iterator<IndexValue> it1 = this.iteratorNotZero();
             Iterator<IndexValue> it2 = fooVector.iteratorNotZero();
 
+            if (it1 == null || it2 == null) return 0;
+
             while (it1.hasNext() && it2.hasNext()) {
                 IndexValue iv1 = it1.next();
                 IndexValue iv2 = it2.next();
