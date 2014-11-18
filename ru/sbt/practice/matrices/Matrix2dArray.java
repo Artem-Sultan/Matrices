@@ -19,6 +19,9 @@ public class Matrix2dArray extends AbstractMatrix {
         dataMatrix = data;
     }
 
+    public Matrix2dArray(Matrix matrixCopy) {super(matrixCopy);}
+
+
     @Override
     public double getElement(int i, int j) {
         return dataMatrix[i][j];

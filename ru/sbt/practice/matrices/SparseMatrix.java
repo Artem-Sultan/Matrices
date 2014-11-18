@@ -18,6 +18,8 @@ public class SparseMatrix extends AbstractMatrix {
         super(data);
     }
 
+    public SparseMatrix(Matrix matrixCopy) {super(matrixCopy);}
+
     @Override
     public double getElement(int i, int j) {
         if (i < 0 || i >= nLines)

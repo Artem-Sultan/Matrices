@@ -28,6 +28,21 @@ public abstract class AbstractMatrix implements Matrix {
         }
     }
 
+
+    protected AbstractMatrix(Matrix matrixCopy){
+        this.nLines = matrixCopy.getNumberOfLines();
+        this.nColumns = matrixCopy.getNumberOfColumns();
+        Iterator<KeyImpl> iterator = matrixCopy.notZeroIterator();
+        KeyImpl tmp;
+        int x,y;
+        while (iterator.hasNext()) {
+            tmp = iterator.next();
+            x = tmp.x;
+            y = tmp.y;
+            this.setElement(x,y,matrixCopy.getElement(x,y));
+        }
+    }
+
     @Override
     public int getNumberOfLines() {
         return nLines;
