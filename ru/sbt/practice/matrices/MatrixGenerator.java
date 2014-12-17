@@ -1,15 +1,15 @@
 package ru.sbt.practice.matrices;
 
+import ru.sbt.practice.matrices.Containers.KeyImpl;
+
 import java.util.LinkedHashSet;
 import java.util.Random;
-
-import static ru.sbt.practice.matrices.AbstractMatrix.KeyImpl;
 
 /**
  * Created by artem on 17.11.14.
  */
 public class MatrixGenerator implements MatrixGeneratorInterface{
-    private static LinkedHashSet<AbstractMatrix.KeyImpl> randomKeys;
+    private static LinkedHashSet<KeyImpl> randomKeys;
 
     public MatrixGenerator() {
         randomKeys = new LinkedHashSet<KeyImpl>();

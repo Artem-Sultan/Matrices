@@ -1,5 +1,8 @@
 package ru.sbt.practice.matrices;
 
+import ru.sbt.practice.matrices.Containers.KeyImpl;
+import ru.sbt.practice.matrices.Containers.TripleImpl;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,20 +45,26 @@ public class SparseMatrix extends AbstractMatrix {
 
 
     @Override
-    public Iterator<KeyImpl> notZeroIterator() {
-        final Iterator<KeyImpl> it = sparseData.keySet().iterator();
-        class notZeroIt  implements Iterator<KeyImpl>{
+    public Iterator<TripleImpl> notZeroIterator() {
+        final Iterator<Map.Entry<KeyImpl, Double>> it = sparseData.entrySet().iterator();
+        class notZeroIt  implements Iterator<TripleImpl>{
             @Override
             public boolean hasNext() {
                 return it.hasNext();
             }
 
             @Override
-            public KeyImpl next() {
-                return it.next();
+            public TripleImpl next() {
+                Map.Entry<KeyImpl, Double> entry = it.next();
+                return new TripleImpl(entry.getKey().getX(), entry.getKey().getY(),entry.getValue());
             }
         }
         return new notZeroIt();
+    }
+
+    @Override
+    public Iterator<Double> notZeroEntryIterator() {
+        return sparseData.values().iterator();
     }
 
     @Override

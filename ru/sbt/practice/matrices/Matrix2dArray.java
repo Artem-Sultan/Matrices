@@ -1,5 +1,7 @@
 package ru.sbt.practice.matrices;
 
+import ru.sbt.practice.matrices.Containers.TripleImpl;
+
 import java.util.Iterator;
 
 /**
@@ -31,8 +33,8 @@ public class Matrix2dArray extends AbstractMatrix {
         dataMatrix[i][j] = element;
     }
     @Override
-    public Iterator<KeyImpl> notZeroIterator() {
-         class notZeroIterator implements Iterator<KeyImpl> {
+    public Iterator<TripleImpl> notZeroIterator() {
+         class notZeroIterator implements Iterator<TripleImpl> {
              private int tempLineNotZero=0;
              private int tempColumnNotZero=0;
 
@@ -56,19 +58,24 @@ public class Matrix2dArray extends AbstractMatrix {
              }
 
              @Override
-             public KeyImpl next() {
+             public TripleImpl next() {
                  hadNext = false;
                  if (tempColumnNotZero == nColumns-1) {
                      int tmp = tempColumnNotZero;
                      tempColumnNotZero = 0;
-                     return new KeyImpl(tempLineNotZero++, tmp);
+                     tempLineNotZero++;
+                     return new TripleImpl(tempLineNotZero, tmp, dataMatrix[tempLineNotZero][tmp]);
                  }
-                 return new KeyImpl(tempLineNotZero, tempColumnNotZero++);
-
+                 tempColumnNotZero++;
+                 return new TripleImpl(tempLineNotZero, tempColumnNotZero, dataMatrix[tempLineNotZero][tempColumnNotZero]);
              }
-
          }
         return new notZeroIterator();
+    }
+
+    @Override
+    public Iterator<Double> notZeroEntryIterator() {
+        return null;
     }
 
 

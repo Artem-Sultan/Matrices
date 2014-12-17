@@ -1,5 +1,7 @@
 package ru.sbt.practice.matrices;
 
+import ru.sbt.practice.matrices.Containers.TripleImpl;
+
 import java.util.Iterator;
 
 /**
@@ -14,7 +16,12 @@ public interface Matrix {
 
     Matrix sparsePlus(Matrix M, Class matrixClass);
     Matrix plus (Matrix M, Class matrixClass);
-    Iterator<AbstractMatrix.KeyImpl> notZeroIterator ();
+    Matrix productWithScalar(double scalar);
+
+    Iterator<TripleImpl> notZeroIterator ();
+
+    Iterator<Double> notZeroEntryIterator ();
+
     Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException;
     Matrix transpose();
     Vector getLine(int line);

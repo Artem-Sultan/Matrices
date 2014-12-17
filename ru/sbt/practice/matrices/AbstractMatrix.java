@@ -1,8 +1,10 @@
 package ru.sbt.practice.matrices;
 
-import java.util.HashMap;
+import ru.sbt.practice.matrices.Containers.TripleImpl;
+
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -32,14 +34,16 @@ public abstract class AbstractMatrix implements Matrix {
     protected AbstractMatrix(Matrix matrixCopy){
         this.nLines = matrixCopy.getNumberOfLines();
         this.nColumns = matrixCopy.getNumberOfColumns();
-        Iterator<KeyImpl> iterator = matrixCopy.notZeroIterator();
-        KeyImpl tmp;
+        Iterator<TripleImpl> iterator = matrixCopy.notZeroIterator();
+        TripleImpl tmp;
         int x,y;
+        double element;
         while (iterator.hasNext()) {
             tmp = iterator.next();
-            x = tmp.x;
-            y = tmp.y;
-            this.setElement(x,y,matrixCopy.getElement(x,y));
+            x = tmp.getX();
+            y = tmp.getY();
+            element = tmp.getElement();
+            this.setElement(x,y,element);
         }
     }
 
@@ -66,24 +70,25 @@ public abstract class AbstractMatrix implements Matrix {
 
     @Override
     public Matrix sparsePlus(Matrix M, Class matrixClass) {
-        Map<KeyImpl, String> cash = new HashMap<KeyImpl, String>();
-        final String foo = " ";
+        Set<TripleImpl> cash = new HashSet<TripleImpl>();
         Matrix result = MatrixFactory.create(matrixClass,nLines, nColumns);
-        Iterator<KeyImpl> it = this.notZeroIterator();
+        Iterator<TripleImpl> it = this.notZeroIterator();
         while (it.hasNext()) {
-            KeyImpl pair = it.next();
-            int x = pair.getX();
-            int y = pair.getY();
-            result.setElement(x, y, M.getElement(x, y) + this.getElement(x, y));
-            cash.put(pair, foo);
+            TripleImpl triple = it.next();
+            int x = triple.getX();
+            int y = triple.getY();
+            double element = triple.getElement();
+            result.setElement(x, y, M.getElement(x, y) + element);
+            cash.add(triple);
         }
-        Iterator<KeyImpl> it2 = M.notZeroIterator();
+        Iterator<TripleImpl> it2 = M.notZeroIterator();
         while (it2.hasNext()) {
-            KeyImpl pair = it2.next();
-            if (cash.get(pair) == null) {
-                int x = pair.getX();
-                int y = pair.getY();
-                result.setElement(x, y, M.getElement(x, y));
+            TripleImpl triple = it2.next();
+            if (!cash.contains(triple)) {
+                int x = triple.getX();
+                int y = triple.getY();
+                double element = triple.getElement();
+                result.setElement(x, y, element);
             }
         }
         return result;
@@ -97,7 +102,7 @@ public abstract class AbstractMatrix implements Matrix {
                  result.setElement(i, j, M.getElement(i, j) + this.getElement(i, j));
             }
         }
-        return null;
+        return result;
     }
 
     @Override
@@ -126,7 +131,7 @@ public abstract class AbstractMatrix implements Matrix {
 
 
     @Override
-    public abstract Iterator<KeyImpl> notZeroIterator();
+    public abstract Iterator<TripleImpl> notZeroIterator();
 
 
     @Override
@@ -148,10 +153,10 @@ public abstract class AbstractMatrix implements Matrix {
             }
 
             @Override
-            public Iterator<KeyImpl> notZeroIterator() {
-                final Iterator<KeyImpl> it = AbstractMatrix.this.notZeroIterator();
+            public Iterator<TripleImpl> notZeroIterator() {
+                final Iterator<TripleImpl> it = AbstractMatrix.this.notZeroIterator();
 
-                class transposedIterator implements Iterator<KeyImpl> {
+                class transposedIterator implements Iterator<TripleImpl> {
 
                     @Override
                     public boolean hasNext() {
@@ -159,12 +164,17 @@ public abstract class AbstractMatrix implements Matrix {
                     }
 
                     @Override
-                    public KeyImpl next() {
-                        KeyImpl tmp = it.next();
-                        return new KeyImpl(tmp.y, tmp.x);
+                    public TripleImpl next() {
+                        TripleImpl tmp = it.next();
+                        return new TripleImpl(tmp.getY(), tmp.getX(), tmp.getElement());
                     }
                 }
                 return new transposedIterator();
+            }
+
+            @Override
+            public Iterator<Double> notZeroEntryIterator() {
+                return AbstractMatrix.this.notZeroEntryIterator();
             }
 
 
@@ -187,45 +197,19 @@ public abstract class AbstractMatrix implements Matrix {
     @Override
     public abstract Vector getColumn(int column);
 
-
-    public static class KeyImpl {
-        public int getX() {
-            return x;
+    @Override
+    public Matrix productWithScalar(double scalar) {
+        Class myClass = this.getClass();
+        Matrix result = MatrixFactory.create(myClass,nLines,nColumns);
+        Iterator<TripleImpl> it = notZeroIterator();
+        while (it.hasNext()) {
+            TripleImpl nextTriple =  it.next();
+            result.setElement(nextTriple.getX(),nextTriple.getY(),scalar*nextTriple.getElement());
         }
-
-        public int getY() {
-            return y;
-        }
-
-        private final int x;
-        private final int y;
-
-        public KeyImpl(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof KeyImpl)) return false;
-            KeyImpl key = (KeyImpl) o;
-            return x == key.x && y == key.y;
-        }
-
-        @Override
-        public int hashCode() {
-            int res = 17;
-            res = res * 31 + Math.min(x, y);
-            res = res * 31 + Math.max(y, x);
-            return res;
-        }
-        @Override
-        public String toString() {
-            return  x + " " + y;
-        }
-
+        return result;
     }
+
+
 
     @Override
     public String toString() {
@@ -239,3 +223,4 @@ public abstract class AbstractMatrix implements Matrix {
         return tmp;
     }
 }
+

@@ -1,5 +1,7 @@
 package ru.sbt.practice.matrices;
 
+import ru.sbt.practice.matrices.Containers.TripleImpl;
+
 import java.util.Iterator;
 
 /**
@@ -16,6 +18,7 @@ public abstract class AbstractVector implements Vector {
             this.setElement(i, vector[i]);
         }
     }
+
 
     public AbstractVector(int _length) {
         length = _length;
@@ -115,7 +118,12 @@ public abstract class AbstractVector implements Vector {
         }
 
         @Override
-        public Iterator<KeyImpl> notZeroIterator() {
+        public Iterator<TripleImpl> notZeroIterator() {
+            return null;
+        }
+
+        @Override
+        public Iterator<Double> notZeroEntryIterator() {
             return null;
         }
 
