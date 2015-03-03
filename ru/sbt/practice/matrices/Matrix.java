@@ -19,7 +19,6 @@ public interface Matrix {
     Matrix productWithScalar(double scalar);
 
     Iterator<TripleImpl> notZeroIterator ();
-
     Iterator<Double> notZeroEntryIterator ();
 
     Matrix productWith(Matrix foo, Class resultClass) throws IllegalArgumentException;

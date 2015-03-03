@@ -4,7 +4,6 @@ import ru.sbt.practice.matrices.Containers.TripleImpl;
 import ru.sbt.practice.matrices.Matrix;
 import ru.sbt.practice.matrices.MatrixFactory;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -18,7 +17,6 @@ public class Converter {
 
         int wordsW = matrix.getNumberOfLines();
         int docsD = matrix.getNumberOfColumns();
-
         Matrix phi = MatrixFactory.create(matrixClass, wordsW, themesT);
         Matrix theta = MatrixFactory.create(matrixClass,themesT,docsD);
 
@@ -27,29 +25,27 @@ public class Converter {
         Iterator<TripleImpl> notZeroIterator = matrix.notZeroIterator();
 
         for (int i = 0; i < nIterations; i++) {
-            //double[][] nWT = new double[wordsW][themesT];
             Matrix nWT = MatrixFactory.create(matrixClass, wordsW,themesT);
-            //double[][] nTD = new double[themesT][docsD];
             Matrix nTD = MatrixFactory.create(matrixClass, themesT,docsD);
             double[] nT = new double[themesT];
             double[] nD = new double[docsD];
             double nTWD;
             while (notZeroIterator.hasNext()) {
                 TripleImpl triple = notZeroIterator.next();
-                int d = triple.getX();
-                int w = triple.getY();
+                int w = triple.getX();
+                int d = triple.getY();
                 double element = triple.getElement();
                 double normCoefficient = phi.getLine(w).scalarProductWith(theta.getColumn(d));
                 for (int t = 0; t < themesT; t++) {
                     nTWD = element * phi.getElement(w, t) * theta.getElement(t, d) / normCoefficient;
 
                     nWT.setElement(w,t,nWT.getElement(w,t)+nTWD);
-                    nTD.setElement(t,d,nTD.getElement(w,t)+nTWD);
+                    nTD.setElement(t,d,nTD.getElement(t,d)+nTWD);
                     nT[t] += nTWD;
                     nD[d] += nTWD;
                 }
-
             }
+
 
             for (int t = 0; t < themesT; t++) {
                 for (int w = 0; w < wordsW; w++) {
@@ -69,16 +65,6 @@ public class Converter {
             for (int j = 0; j < m.getNumberOfColumns(); j++) {
                 m.setElement(i,j,rand.nextDouble());
             }
-
-        }
-    }
-
-    private static void setZero(double[] array) {
-            Arrays.fill(array, 0);
-    }
-    private static void setZero(double[][] array) {
-        for (double[] line : array) {
-            Arrays.fill(line, 0);
         }
     }
 }

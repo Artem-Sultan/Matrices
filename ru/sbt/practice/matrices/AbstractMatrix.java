@@ -209,7 +209,7 @@ public abstract class AbstractMatrix implements Matrix {
         return result;
     }
 
-
+/*
 
     @Override
     public String toString() {
@@ -222,5 +222,6 @@ public abstract class AbstractMatrix implements Matrix {
         }
         return tmp;
     }
+    */
 }
 

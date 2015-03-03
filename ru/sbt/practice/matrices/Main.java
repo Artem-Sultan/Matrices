@@ -46,8 +46,6 @@ public class Main {
 
         MatrixGenerator mGenerator = new MatrixGenerator();
         SparseMatrix newM22 = (SparseMatrix)mGenerator.randomSparse(SparseMatrix.class,1000,200,0.3);
-        SparseMatrix newM32 = (SparseMatrix)mGenerator.randomNonSparse(SparseMatrix.class, 100,200);
-
 
 
 /*

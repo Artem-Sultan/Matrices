@@ -30,7 +30,6 @@ public class CashWorker implements Runnable {
     @Override
     public void run() {
        TripleImpl tmp = null;
-       // System.out.println("cash up");
         int flagg = flag.get();
        // System.out.println("producers:" + nProducers);
         while ((flagg=flag.get()) < nProducers) {
