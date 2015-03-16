@@ -1,6 +1,6 @@
 package ru.sbt.practice.matrices;
 
-import ru.sbt.practice.matrices.LAD.Converter;
+import ru.sbt.practice.matrices.LAD.MatrixDecomposer;
 import ru.sbt.practice.matrices.Product.ProductMaker;
 
 import java.util.Iterator;
@@ -65,7 +65,7 @@ public class Main {
         long startTime3 = System.currentTimeMillis();
 
 
-        Matrix[] lad = Converter.convert(newM22,15,SparseMatrix.class,50,1,50);
+        Matrix[] lad = MatrixDecomposer.decomposeWithNumberOfThemes(newM22, 15, SparseMatrix.class, 50, 1, 50);
         Matrix result11 = newM22.productWithScalar(-1);
         Matrix finalM = result11.plus(lad[0].productWith(lad[1],SparseMatrix.class), SparseMatrix.class);
         Iterator <Double> nz = finalM.notZeroEntryIterator();
