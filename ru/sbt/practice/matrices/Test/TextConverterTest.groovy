@@ -7,12 +7,11 @@ import ru.sbt.practice.matrices.TextProcessing.TextConverter
  * Created by artem on 03.03.15.
  */
 class TextConverterTest extends GroovyTestCase {
-    private text2 = "Алгоритм был очень популярен и тиражируем, в него часто вносились изменения разными разработчиками, причём не всегда удачные. Примерно в 2000 году Портер принял решение «заморозить» проект и впредь распространять одну-единственную"
+    private text2 = "тающий снимающий жующий"
     private text = "The libraries for JUnit and TestNG are shipped with IntelliJ IDEA, but are not included in the classpath of your project or module by default. Consequently, when a test class is created, the references to the TestCase class or test annotations are not resolved.";
     @Before
     void setUp() {
         super.setUp()
-
     }
     @After
     void tearDown() {

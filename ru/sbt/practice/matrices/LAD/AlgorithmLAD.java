@@ -102,16 +102,11 @@ public class AlgorithmLAD extends AlgorithmEM
                 nD[d] += nTWD;
             }
         }
+
         private void mLoop() {
             for (int t = 0; t < constants.themesT; t++) {
                 populateThemeInPhi(t);
                 populateThemeInTheta(t);
-            }
-        }
-
-        private void populateThemeInTheta(int t) {
-            for (int d = 0; d < constants.docsD; d++) {
-                theta.setElement(t,d, computeThetaElement(t, d));
             }
         }
 
@@ -121,13 +116,20 @@ public class AlgorithmLAD extends AlgorithmEM
             }
         }
 
-        private double computeThetaElement(int t, int d) {
-            return (nTD.getElement(t,d)+constants.beta)/(nD[d]+parameters.getConstBeta());
+        private void populateThemeInTheta(int t) {
+            for (int d = 0; d < constants.docsD; d++) {
+                theta.setElement(t,d, computeThetaElement(t, d));
+            }
         }
 
         private double computePhiElement(int t, int w) {
             return (nWT.getElement(w,t)+constants.alpha)/(nT[t] + parameters.getConstAlpha());
         }
+
+        private double computeThetaElement(int t, int d) {
+            return (nTD.getElement(t,d)+constants.beta)/(nD[d]+parameters.getConstBeta());
+        }
+
     }
 
     private class AlgorithmConstants {

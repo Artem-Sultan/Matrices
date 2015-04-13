@@ -1,9 +1,6 @@
 package ru.sbt.practice.matrices;
 
-import ru.sbt.practice.matrices.LAD.MatrixDecomposer;
 import ru.sbt.practice.matrices.Product.ProductMaker;
-
-import java.util.Iterator;
 
 /**
  * Created by artem on 28.10.14.
@@ -64,7 +61,7 @@ public class Main {
 */
         long startTime3 = System.currentTimeMillis();
 
-
+/*
         Matrix[] lad = MatrixDecomposer.decomposeWithNumberOfThemes(newM22, 15, SparseMatrix.class, 50, 1, 50);
         Matrix result11 = newM22.productWithScalar(-1);
         Matrix finalM = result11.plus(lad[0].productWith(lad[1],SparseMatrix.class), SparseMatrix.class);
@@ -97,7 +94,7 @@ public class Main {
         //System.out.println(result11.getElement(0,0));
         //System.out.println(test1.productWith(test2,Matrix2dArray.class));
 
-
+*/
 
     }
 }
