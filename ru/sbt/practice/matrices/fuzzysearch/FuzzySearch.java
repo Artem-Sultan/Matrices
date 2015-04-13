@@ -1,5 +1,17 @@
 package ru.sbt.practice.matrices.fuzzysearch;
 
+import ru.sbt.practice.matrices.fuzzysearch.alphabet.RussianAlphabet;
+import ru.sbt.practice.matrices.fuzzysearch.metric.DamerauLevensteinMetric;
+import ru.sbt.practice.matrices.fuzzysearch.metric.LevensteinMetric;
+import ru.sbt.practice.matrices.fuzzysearch.ngram.index.Index;
+import ru.sbt.practice.matrices.fuzzysearch.ngram.index.NGramIndexM1;
+import ru.sbt.practice.matrices.fuzzysearch.ngram.indexer.NGramIndexerM1;
+import ru.sbt.practice.matrices.fuzzysearch.ngram.searcher.NGramSearcherM1;
+import ru.sbt.practice.matrices.fuzzysearch.ngram.searcher.Searcher;
+import ru.sbt.practice.matrices.fuzzysearch.onlinesearch.BitapOnlineSearcher;
+import ru.sbt.practice.matrices.fuzzysearch.onlinesearch.MetricOnlineSearcher;
+import ru.sbt.practice.matrices.fuzzysearch.onlinesearch.OnlineSearcher;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

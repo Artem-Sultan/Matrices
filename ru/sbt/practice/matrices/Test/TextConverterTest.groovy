@@ -23,6 +23,5 @@ class TextConverterTest extends GroovyTestCase {
         for (String v : ss) {
             print(v+ " ")
         }
-
     }
 }
